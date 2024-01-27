@@ -148,8 +148,10 @@ def chatbot():
                     message(st.session_state["generated"][i], key=str(i))
 
 st.sidebar.title("Navigation")
-selection = st.sidebar.radio("Go to", ["Upload File","Interaction with pdf"])
+selection = st.sidebar.radio("Go to", ["Upload File","Interaction with pdf", "Q & A"])
 if selection == "Upload File":
     upload()
 elif selection == "Interaction with pdf":
     chatbot()
+elif selection == "Q & A":
+    pass

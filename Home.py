@@ -31,59 +31,63 @@ def signUp():
         else:
             payload = {
                 "username" : username,
-                "password" : password
+                "password" : password,
+                "level" : level
             }
             url = f"{base_url}/signup"
             result = requests.post(
                 url,
-                data=json.dumps(payload),
+                data =payload,
             )
             contents_of_results = result.content
             contents_of_results = json.loads(contents_of_results.decode('utf-8'))
             if contents_of_results['status_code'] == 200:
                 st.success(contents_of_results['message'])
-                st.session_state['userName'] = username
-
+                st.info("Now proceed to sign in")
             else:
                 st.error(contents_of_results['message'])
 
 def login():
-	st.title("Login")
-	
-	with st.form("login",clear_on_submit=True):
-		username = st.text_input("Username")
-		password = st.text_input("Password", type="password")
-		login_button = st.form_submit_button('login')
+    st.title("Login")
 
-	required_fields = [
-		(username, "Username field is required."),
-		(password, "Password field is required."),
-	]
-	
-	if login_button:
-		errors = [error_msg for field, error_msg in required_fields if not field]
-		if errors:
-			for error in errors:
-				st.error(error)
-		else:
-			payload = {
-				"username" : username,
-				"password" : password
-			}
-			url = f"{base_url}/login"
-			result = requests.post(
-				url,
-				data=json.dumps(payload),
-			)
-			contents_of_results = result.content
-			contents_of_results = json.loads(contents_of_results.decode('utf-8'))
-			if contents_of_results['status_code'] == 200:
-				st.success(contents_of_results['message'])
-				st.info("...Successfully signed in. You can use all features now...")
-				st.session_state['loggedIn'] = True
+    with st.form("login",clear_on_submit=True):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        login_button = st.form_submit_button('login')
 
-			else:
-				st.error(contents_of_results['message'])
+    required_fields = [
+    (username, "Username field is required."),
+    (password, "Password field is required."),
+    ]
+    if login_button:
+        errors = [error_msg for field, error_msg in required_fields if not field]
+        if errors:
+            for error in errors:
+                st.error(error)
+        else:
+            payload = {
+                "username" : username,
+                "password" : password
+            }
+            url = f"{base_url}/login"
+            result = requests.post(
+                url,
+                data=payload,
+            )
+            contents_of_results = result.content
+            contents_of_results = json.loads(contents_of_results.decode('utf-8'))
+            if contents_of_results['status_code'] == 200:
+                st.success(contents_of_results['message'])
+                st.session_state['loggedIn'] = {"uid" : contents_of_results["uid"]}
+                st.info("...Successfully signed in. You can use all features now...")
+                
+                
+                
+            else:
+                st.error(contents_of_results['message'])
+            
+	
+	
     
 
 
