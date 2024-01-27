@@ -1,53 +1,117 @@
 import os
 import random
-import string
-import pinecone
-import traceback
 import streamlit as st
 from dotenv import load_dotenv
 from streamlit_chat import message
-from langchain_openai import ChatOpenAI
-from langchain.chains import RetrievalQA
-from langchain_openai import OpenAIEmbeddings
-from langchain_community.vectorstores import FAISS
-from langchain.agents import initialize_agent, Tool
-from langchain.memory import ConversationBufferMemory
-from langchain.text_splitter import CharacterTextSplitter
-from langchain_community.document_loaders import PyPDFLoader
+import requests
+import json
 
-
-
+load_dotenv()
+base_url = os.getenv("BaseUrl")
 
 def signUp():
-    pass
+    st.title("Sign Up")
+	
+    with st.form("signup",clear_on_submit=False):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        level = st.selectbox("What is your level", ["College", "Highschool"])
+        signUp_button = st.form_submit_button('Sign Up')
+
+    required_fields = [
+        (username, "Username field is required."),
+        (password, "Password field is required."),
+    ]
+	
+    if signUp_button:
+        errors = [error_msg for field, error_msg in required_fields if not field]
+        if errors:
+            for error in errors:
+                st.error(error)
+        else:
+            payload = {
+                "username" : username,
+                "password" : password
+            }
+            url = f"{base_url}/signup"
+            result = requests.post(
+                url,
+                data=json.dumps(payload),
+            )
+            contents_of_results = result.content
+            contents_of_results = json.loads(contents_of_results.decode('utf-8'))
+            if contents_of_results['status_code'] == 200:
+                st.success(contents_of_results['message'])
+                st.session_state['userName'] = username
+
+            else:
+                st.error(contents_of_results['message'])
 
 def login():
-    uname = st.text_input("Username or email")
+	st.title("Login")
+	
+	with st.form("login",clear_on_submit=True):
+		username = st.text_input("Username")
+		password = st.text_input("Password", type="password")
+		login_button = st.form_submit_button('login')
 
-    password = st.text_input("Password", type="password")
+	required_fields = [
+		(username, "Username field is required."),
+		(password, "Password field is required."),
+	]
+	
+	if login_button:
+		errors = [error_msg for field, error_msg in required_fields if not field]
+		if errors:
+			for error in errors:
+				st.error(error)
+		else:
+			payload = {
+				"username" : username,
+				"password" : password
+			}
+			url = f"{base_url}/login"
+			result = requests.post(
+				url,
+				data=json.dumps(payload),
+			)
+			contents_of_results = result.content
+			contents_of_results = json.loads(contents_of_results.decode('utf-8'))
+			if contents_of_results['status_code'] == 200:
+				st.success(contents_of_results['message'])
+				st.info("...Successfully signed in. You can use all features now...")
+				st.session_state['loggedIn'] = True
+
+			else:
+				st.error(contents_of_results['message'])
     
 
 
 
 def main():
-    st.title('Welcome to StudyBuddy')
+    if 'loggedIn' in st.session_state:
+        st.write("The Onestop AI tool to help you power through your study. Kindly check the about page to ")
 
-    # Adding a brief description
-    st.write("The Onestop AI tool to help you power through your study. Kindly check the about page to ")
+        st.write("You are logged in, proceed to use all our wonderful features")
+    else:
+        st.title('Welcome to StudyBuddy')
 
-    st.write("Sign up to access all features if you do not have an account")
+        # Adding a brief description
+        st.write("The Onestop AI tool to help you power through your study. Kindly check the about page to ")
 
-    
-    st.write("Login to your account to continue ")
+        st.write("Sign up to access all features if you do not have an account")
+
+        
+        st.write("Login to your account to continue ")
 
 
-    st.sidebar.title("Option")
+        st.sidebar.title("Option")
 
-    selection = st.sidebar.radio("Go to", ["Sign up","Login"])
-    if selection == "Sign up":
-        signUp()
-    elif selection == "Login":
-        login()
+        selection = st.sidebar.radio("Go to", ["Sign up","Login"])
+        if selection == "Sign up":
+            signUp()
+        elif selection == "Login":
+            login()
 
 
 if __name__ == "__main__":

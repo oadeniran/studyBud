@@ -1,4 +1,4 @@
-import Flask, requests
+from flask import Flask, request
 
 app = Flask(__name__)
 
@@ -6,16 +6,16 @@ app = Flask(__name__)
 def index():
     return "studybud User Api"
 
-@app.route("/signup", method = ["POST"])
+@app.route("/signup", methods = ["POST"])
 def signup():
-    requests.form.to_dict()
+    request.form.to_dict()
     pass
 
-@app.route("/login", method = ["Post"])
+@app.route("/login", methods = ["Post"])
 def login():
     pass
 
-@app.route("/update-conversation-history",method = ["Post"])
+@app.route("/update-conversation-history",methods = ["Post"])
 def update_conv_hist():
     pass
 
@@ -24,4 +24,4 @@ def update_conv_hist():
 
 
 if __name__ == "__main__":
-    app.run(host = "0.0.0.")
+    app.run(host = "0.0.0.0")
