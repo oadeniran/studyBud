@@ -22,7 +22,9 @@ def signUp():
     pass
 
 def login():
-    pass
+    uname = st.text_input("Username or email")
+
+    password = st.text_input("Password", type="password")
     
 
 
