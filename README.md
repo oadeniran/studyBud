@@ -1,2 +1,1 @@
-# studyBud
-The Official repo for studyBud 
+# LangchainDocuments
