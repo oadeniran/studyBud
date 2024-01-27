@@ -1,1 +1,1 @@
-# LangchainDocuments
+# StudyBud
