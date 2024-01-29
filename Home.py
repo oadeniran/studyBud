@@ -13,7 +13,7 @@ def signUp():
     st.title("Sign Up")
 	
     with st.form("signup",clear_on_submit=False):
-        username = st.text_input("Username")
+        username = st.text_input("Username (lowercase)")
         password = st.text_input("Password", type="password")
         level = st.selectbox("What is your level", ["College", "Highschool"])
         signUp_button = st.form_submit_button('Sign Up')
@@ -30,7 +30,7 @@ def signUp():
                 st.error(error)
         else:
             payload = {
-                "username" : username,
+                "username" : username.lower(),
                 "password" : password,
                 "level" : level
             }
@@ -66,7 +66,7 @@ def login():
                 st.error(error)
         else:
             payload = {
-                "username" : username,
+                "username" : username.lower(),
                 "password" : password
             }
             url = f"{base_url}/login"
@@ -80,16 +80,8 @@ def login():
                 st.success(contents_of_results['message'])
                 st.session_state['loggedIn'] = {"uid" : contents_of_results["uid"]}
                 st.info("...Successfully signed in. You can use all features now...")
-                
-                
-                
             else:
                 st.error(contents_of_results['message'])
-            
-	
-	
-    
-
 
 
 def main():
@@ -98,16 +90,10 @@ def main():
 
         st.write("You are logged in, proceed to use all our wonderful features")
     else:
-        st.title('Welcome to StudyBuddy')
+        st.title('Welcome to StudyBuddy😎😎')
 
         # Adding a brief description
-        st.write("The Onestop AI tool to help you power through your study. Kindly check the about page to ")
-
-        st.write("Sign up to access all features if you do not have an account")
-
-        
-        st.write("Login to your account to continue ")
-
+        st.write("""Being your StudyBuddy, my Job is to help you power through your study with ease. Kindly Signup to access all features if you do not have an account. If you have an account already, please Login to proceed.""")
 
         st.sidebar.title("Option")
 

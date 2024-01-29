@@ -135,7 +135,6 @@ def chatbot():
         user_input = st.text_input("Type your question here.", key=st.session_state["input_message_key"])
         if st.button("Send"):
             # try:
-
             response = st.session_state["qabot"].get_response(user_input)
             st.session_state["past"].append(user_input)
             st.session_state["generated"].append(response['output'])
@@ -147,6 +146,9 @@ def chatbot():
                     message(st.session_state["past"][i], is_user=True, key=str(i) + "_user")
                     message(st.session_state["generated"][i], key=str(i))
 
+def q_and_a():
+    pass
+
 st.sidebar.title("Navigation")
 selection = st.sidebar.radio("Go to", ["Upload File","Interaction with pdf", "Q & A"])
 if selection == "Upload File":
@@ -154,4 +156,4 @@ if selection == "Upload File":
 elif selection == "Interaction with pdf":
     chatbot()
 elif selection == "Q & A":
-    pass
+    q_and_a()
