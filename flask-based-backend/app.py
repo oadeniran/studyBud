@@ -60,7 +60,7 @@ def login():
         details = userinfo_d.find_one({"username" : login_det["username"]})
     except:
         return json.dumps({
-                    "message" : "User not found",
+                    "message" : "Error with DB",
                     "status_code" : 404
                     })
     
@@ -75,21 +75,72 @@ def login():
             return json.dumps({
             "message" : "Wrong Password",
             "status_code" : 400})
+    else:
+        return json.dumps({
+                    "message" : "User not found",
+                    "status_code" : 404
+                    })
 
 @app.route("/update-conversation-history",methods = ["Post"])
 def update_conv_hist():
     pass
 
-@app.route("/get_conversation_history")
+@app.route("/get_conversation_history",methods = ["Post"])
 def get_conversation_history():
     details = request.form.to_dict()
     uid = details["uid"]
     file_info = details["file_id"]
+
+@app.route("/update-user-categories", methods = ["Post"])
+def update_user_cat():
+    details = request.json
+    #print(details)
+    try:
+        curr_cats = user_cat.find_one({"uid" : details["uid"]})
+    except:
+        return json.dumps({
+                    "message" : "Error in DB",
+                    "status_code" : 404
+                    })
     
+    if curr_cats:
+        user_cat.find_one_and_update({"uid" : details["uid"]}, details)
+        return {"message": "Success in updating category",
+                "status_code" : 200}
+    else:
+        try:
+            user_cat.insert_one(details)
+            return {"message": "Success in updating category",
+                "status_code" : 200}
+        except:
+            return {"message": "Error in updating category",
+                    "status_code" : 400}
+
+@app.route("/get-user-categories", methods = ["Post"])
+def get_categories():
+    uid = request.form.to_dict()["uid"]
+    try:
+        details = user_cat.find_one({"uid" : uid})
+    except:
+        return {"message" : "Error with db",
+                "status_code": 400}
+    
+    print(details)
+    
+    if details:
+        resp = {"status_code": 200, 
+                "categories" : details["categories"],
+                "category_det" : details["category_det"]}
+        return resp
+    else:
+        return {"message" : "No Categories yet",
+                "status_code": 300}
+
 
 
 if __name__ == "__main__":
     client = get_database()
     userinfo_d = client['users-details']
     user_hist = client['users-history']
+    user_cat = client["users-categories"]
     app.run(host = "0.0.0.0", debug=True, port=9000)

@@ -79,7 +79,14 @@ def login():
             if contents_of_results['status_code'] == 200:
                 st.success(contents_of_results['message'])
                 st.session_state['loggedIn'] = {"uid" : contents_of_results["uid"]}
-                st.info("...Successfully signed in. You can use all features now...")
+                cat_res = requests.post(f"{base_url}/get-user-categories", data = {"uid" : contents_of_results["uid"]},)
+                cat_res = cat_res.content
+                cat_res = json.loads(cat_res.decode('utf-8'))
+                if cat_res["status_code"] == 200:
+                    st.session_state["categories"] = cat_res["categories"]
+                    st.session_state["category_det"] = cat_res["category_det"]
+                
+                st.info("...Successfully signed in. You can use all features now...") 
             else:
                 st.error(contents_of_results['message'])
 
