@@ -104,16 +104,22 @@ def update_user_cat():
                     })
     
     if curr_cats:
-        user_cat.find_one_and_update({"uid" : details["uid"]}, details)
+        print(details)
+        try:
+            user_cat.find_one_and_update({"uid" : details["uid"]}, {'$set' : details})
+        except:
+            return {"message": "Error in updating category",
+                    "status_code" : 400}
+        
         return {"message": "Success in updating category",
                 "status_code" : 200}
     else:
         try:
             user_cat.insert_one(details)
-            return {"message": "Success in updating category",
+            return {"message": "Success in creating category",
                 "status_code" : 200}
         except:
-            return {"message": "Error in updating category",
+            return {"message": "Error in creating category",
                     "status_code" : 400}
 
 @app.route("/get-user-categories", methods = ["Post"])

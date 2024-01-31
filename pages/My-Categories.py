@@ -15,6 +15,7 @@ def run_cat_selection(selection):
     st.title(selection)
     st.subheader(st.session_state["category_det"][ind-1])
 
+
 def add_new_ctegory(categories):
     with st.form("Details",clear_on_submit=True):
         category_name = st.text_input("Name")
@@ -25,6 +26,8 @@ def add_new_ctegory(categories):
             if not category_name:
                 st.error("Name field is required")
             else:
+                if not category_details:
+                    category_details = ""
                 categories.append(category_name)
                 st.session_state['categories'].append(category_name)
                 st.session_state["category_det"].append(category_details)
@@ -39,12 +42,10 @@ def add_new_ctegory(categories):
                     headers={'Content-Type': 'application/json'},
                     data=payload,
                 )
-                print(result.content.decode("utf-8"))
-
-
+                st.success("Category created", icon="👌")
 
 if 'loggedIn' not in st.session_state:
-    st.error("Please Login to Use feature")
+    st.error("Please Login to Use feature......Return Home to login")
 else:
     st.sidebar.title("Navigation")
     if "categories" not in st.session_state:
