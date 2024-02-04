@@ -85,6 +85,7 @@ def login():
                 if cat_res["status_code"] == 200:
                     st.session_state["categories"] = cat_res["categories"]
                     st.session_state["category_det"] = cat_res["category_det"]
+                    st.switch_page("pages/My-Categories.py")
                 
                 st.info("...Successfully signed in. You can use all features now...") 
             else:

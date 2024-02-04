@@ -3,6 +3,7 @@ import requests
 from dotenv import load_dotenv
 import os
 import json
+from pages.Interact import upload
 
 load_dotenv()
 
@@ -10,10 +11,25 @@ base_url = os.getenv("BaseUrl")
 
 categories = ["Add New category"]
 
+def run_selection():
+    pass
+
+def delete_file():
+    pass
+
 def run_cat_selection(selection):
     ind = st.session_state["categories"].index(selection)
     st.title(selection)
     st.subheader(st.session_state["category_det"][ind-1])
+    st.sidebar.title("Options")
+    opt_sel = st.sidebar.selectbox("Actions", ["Interact", "Upload file", "Delete file"])
+    if opt_sel == "Interact":
+        run_selection()
+    elif opt_sel == "Upload file":
+        upload()
+    else:
+        delete_file()
+
 
 
 def add_new_ctegory(categories):
