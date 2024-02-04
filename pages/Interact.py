@@ -173,7 +173,7 @@ def parse_questions(input_text):
     questions = []
 
     for block in question_blocks:
-        if block.strip():
+        if block.strip() and "CHOICE_A" in block:
 
             question_num = int(re.search(r'\d+', block).group())
 
