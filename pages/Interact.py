@@ -24,7 +24,7 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OBJECTIVE="Objective"
 TRUE_OR_FALSE="True/False"
-OBJECTIVE_DEFAULT_VALUE=10
+OBJECTIVE_DEFAULT_VALUE=5
 TRUE_OR_FALSE_DEFAULT_VALUE=5
 
 llm = ChatOpenAI(    
@@ -170,7 +170,7 @@ def chatbot():
 
 
 def parse_questions(input_text):
-    question_blocks = input_text.split('Question')
+    question_blocks = input_text.split('QUESTION')
 
     questions = []
 
@@ -211,7 +211,7 @@ def generate_quizz(document,type,num_of_questions):
 
             Example question:
 
-            Question 1: question here
+            QUESTION 1: question here
             CHOICE_A: NONE
             CHOICE_B: choice here
             CHOICE_C: choice here
@@ -219,7 +219,7 @@ def generate_quizz(document,type,num_of_questions):
             CHOICE_E: choice here
             Answer: C
             
-            Question 2: question here
+            QUESTION 2: question here
             CHOICE_A: NONE
             CHOICE_B: choice here
             CHOICE_C: choice here
@@ -243,13 +243,13 @@ def generate_quizz(document,type,num_of_questions):
 
             Example question:
 
-            Question 1: question here
+            QUESTION 1: question here
             CHOICE_A: NONE
             CHOICE_B: choice here
             CHOICE_C: choice here
             Answer: B
 
-            Question 2: question here
+            QUESTION 2: question here
             CHOICE_A: NONE
             CHOICE_B: choice here
             CHOICE_C: choice here
@@ -349,13 +349,13 @@ def quizz_generation():
     selection = st.radio("What Format do you want?", [OBJECTIVE, TRUE_OR_FALSE],horizontal=True)
     user_input = None
     if selection == OBJECTIVE:
-        user_input = st.number_input('How many Questions Do you want Generated per Page', min_value=1, value=OBJECTIVE_DEFAULT_VALUE, step=1, format='%d')
+        user_input = st.number_input('How many Questions Do you want Generated per Page', min_value=2, value=OBJECTIVE_DEFAULT_VALUE, step=1, format='%d')
         if user_input > OBJECTIVE_DEFAULT_VALUE:
             st.error(f"Error: value should not be greater than {OBJECTIVE_DEFAULT_VALUE}.")
             return
         st.info(f"You'll be tested on a maximum of {OBJECTIVE_DEFAULT_VALUE} questions per Page")
     if selection == TRUE_OR_FALSE:
-        user_input = st.number_input('How many Questions Do you want Generated per Page', min_value=1, value=TRUE_OR_FALSE_DEFAULT_VALUE, step=1, format='%d')
+        user_input = st.number_input('How many Questions Do you want Generated per Page', min_value=2, value=TRUE_OR_FALSE_DEFAULT_VALUE, step=1, format='%d')
         if user_input > TRUE_OR_FALSE_DEFAULT_VALUE:
             st.error(f"Error: value should not be greater than {TRUE_OR_FALSE_DEFAULT_VALUE}.")
             return
@@ -444,4 +444,4 @@ def main():
     elif selection == "Display Quizz":
         display_on_streamlit()
 
-main()
+main()git 
