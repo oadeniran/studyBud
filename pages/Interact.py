@@ -298,7 +298,6 @@ def get_pages(selected_page_ranges,page_ranges_2_index,total_pages):
         from_index, to_index = page_ranges_2_index[page_range]
         for i in range(from_index,to_index):
             pages_to_query.append(total_pages[i])
-    print("Pages is ", pages_to_query)
     return pages_to_query
         
 def get_selected_page_ranges(page_ranges):
@@ -339,13 +338,10 @@ def quizz_generation():
     pages = st.session_state['pages']
     # print("PAEGS is ",pages)
     page_ranges_2_index= generate_page_ranges(len(pages))
-    print("Page reanges index",page_ranges_2_index)
 
     page_ranges = list(page_ranges_2_index.keys())
-    print("page ranges", page_ranges)
     selected_page_ranges = get_selected_page_ranges(page_ranges)
     st.write('Selected Page Range:', ', '.join(selected_page_ranges) if selected_page_ranges else 'None')
-    print("selected Page Range", selected_page_ranges)
     selection = st.radio("What Format do you want?", [OBJECTIVE, TRUE_OR_FALSE],horizontal=True)
     user_input = None
     if selection == OBJECTIVE:
