@@ -3,11 +3,9 @@ import os
 import re
 import random
 import traceback
-import copy
 import streamlit as st
 from dotenv import load_dotenv
 from streamlit_chat import message
-from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
