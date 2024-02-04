@@ -98,16 +98,12 @@ def main():
 
         st.write("You are logged in, proceed to use all our wonderful features")
     else:
-        st.title('Welcome to StudyBuddy')
+        st.title('Welcome to StudyBuddy😎😎')
 
         # Adding a brief description
-        st.write("The Onestop AI tool to help you power through your study. Kindly check the about page to ")
-
-        st.write("Sign up to access all features if you do not have an account")
-
-        
-        st.write("Login to your account to continue ")
-
+        st.write("""
+Being your StudyBuddy, my Job is to help you power through your study with ease. Kindly Signup to access all features if you do not have an account. If you have an account already, please Login to proceed.
+""")
 
         st.sidebar.title("Option")
 
