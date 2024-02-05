@@ -122,10 +122,15 @@ def upload():
                 agency = Agency()
                 agency.initialize_tools(qa,pdf_name)
                 agency.load_agent_details(memory)
-                st.success("PDF processed Successfully!!!")
                 st.session_state['qabot'] = agency
                 st.session_state['pdf_name'] = pdf
-                st.write("Proceed Please")
+                #generate summary
+                response = agency.get_response("In 3 bullet points please generate a descriptive summary of the uploaded document")
+                summary = response['output']
+                st.success("PDF processed Successfully!!!")
+                st.info("Summary of Uploaded Document is shown below")
+                st.write(summary)
+                st.info("Please Proceed By Clicking on any of the Options on the Left Sidebar at the top")
             except Exception as e:
                 print(f"An error occurred: {e}")
                 traceback.print_exc()
