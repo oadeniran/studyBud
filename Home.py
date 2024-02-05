@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from streamlit_chat import message
 import requests
 import json
+from utils import load_cont, load_blob, bot_from_load, load_VS_from_azure
 
 load_dotenv()
 base_url = os.getenv("BaseUrl")
@@ -85,7 +86,17 @@ def login():
                 if cat_res["status_code"] == 200:
                     st.session_state["categories"] = cat_res["categories"]
                     st.session_state["category_det"] = cat_res["category_det"]
+                    st.session_state["categories_dict"] = cat_res["categories_dict"]
+                    st.session_state["bots"] ={}
+                    st.session_state["history_dict"] = cat_res["history_dict"]
+                    cont = load_cont(st.session_state['loggedIn']["uid"])
+                    for cat_name in st.session_state["categories_dict"].keys():
+                        st.session_state["bots"][cat_name[4:]]= [bot_from_load(load_VS_from_azure(cont, blob_name=v), pdf_name=k) for k, v in st.session_state["categories_dict"][cat_name].items()]
                     st.switch_page("pages/My-Categories.py")
+                else:
+                    st.session_state["history_dict"] = {}
+                    st.session_state["bots"] ={}
+
                 
                 st.info("...Successfully signed in. You can use all features now...") 
             else:

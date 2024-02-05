@@ -2,3 +2,4 @@
 test.py
 app.py
 *.pdf
+__pycache__

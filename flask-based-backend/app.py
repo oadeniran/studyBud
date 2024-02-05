@@ -136,12 +136,17 @@ def get_categories():
     if details:
         resp = {"status_code": 200, 
                 "categories" : details["categories"],
-                "category_det" : details["category_det"]}
+                "category_det" : details["category_det"],
+                "categories_dict" : details["categories_dict"],
+                "history_dict": details["history_dict"]}
         return resp
     else:
         return {"message" : "No Categories yet",
                 "status_code": 300}
 
+@app.route("/save-user-cat-upload")
+def save_user_cat_upload():
+    pass
 
 
 if __name__ == "__main__":
