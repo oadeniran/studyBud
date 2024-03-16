@@ -1,5 +1,4 @@
 .env
 test.py
 app.py
-*.pdf
-__pycache__
+UpdateCompiledSEO003.pdf
