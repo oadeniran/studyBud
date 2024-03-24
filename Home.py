@@ -15,13 +15,16 @@ def signUp():
 	
     with st.form("signup",clear_on_submit=False):
         username = st.text_input("Username (lowercase)")
+        email = st.text_input("Email")
         password = st.text_input("Password", type="password")
-        level = st.selectbox("What is your level", ["College", "Highschool"])
+        level = st.selectbox("What is your level", ["College", "Highschool", "Grade school"])
+        college_n = st.text_input("University name")
         signUp_button = st.form_submit_button('Sign Up')
 
     required_fields = [
         (username, "Username field is required."),
         (password, "Password field is required."),
+        (password, "Password field is required.")
     ]
 	
     if signUp_button:
@@ -32,8 +35,10 @@ def signUp():
         else:
             payload = {
                 "username" : username.lower(),
+                "email" : email,
                 "password" : password,
-                "level" : level
+                "level" : level,
+                "college_name": college_n
             }
             url = f"{base_url}/signup"
             result = requests.post(
@@ -91,7 +96,7 @@ def login():
                     st.session_state["history_dict"] = cat_res["history_dict"]
                     cont = load_cont(st.session_state['loggedIn']["uid"])
                     for cat_name in st.session_state["categories_dict"].keys():
-                        st.session_state["bots"][cat_name[4:]]= [bot_from_load(load_VS_from_azure(cont, blob_name=v), pdf_name=k) for k, v in st.session_state["categories_dict"][cat_name].items()]
+                        st.session_state["bots"][cat_name[4:]]= [bot_from_load(load_VS_from_azure(cont, blob_name=v['bot']), pdf_name=k) for k, v in st.session_state["categories_dict"][cat_name].items()]
                     st.switch_page("pages/My-Categories.py")
                 else:
                     st.session_state["history_dict"] = {}

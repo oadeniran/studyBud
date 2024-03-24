@@ -3,7 +3,7 @@ import requests
 from dotenv import load_dotenv
 import os
 import json
-from utils import upload, chatbot
+from utils import upload, chatbot, quizz_generation, display_on_streamlit
 
 
 load_dotenv()
@@ -28,8 +28,8 @@ def post_save_cat():
     )
 
 def run_interact(curr_cat):
-    sub_opt = st.sidebar.radio("What action ?", ["interact", "generate_quiz"])
-    if sub_opt == "interact":
+    sub_opt = st.sidebar.radio("What action ?", ["Interact", "Generate_quiz", "Display Quiz"])
+    if sub_opt == "Interact":
         st.sidebar.write("Select what pdf you want to interact with")
         book = st.sidebar.radio("Select book", [k for k in st.session_state["categories_dict"][f"cat_{curr_cat}"].keys()])
         if book:
@@ -41,6 +41,21 @@ def run_interact(curr_cat):
             ind = [k for k in st.session_state["categories_dict"][f"cat_{curr_cat}"].keys()].index(book)
             
             chatbot(book, curr_cat, ind, st.session_state["history_dict"][curr_cat][book])
+        else:
+            st.header("At least one pdf material must have been uploaded to be interacted with")
+            st.subheader("Please upload a material")  
+
+    elif sub_opt == "Generate_quiz":
+        st.sidebar.write("Select what pdf you want to generate quizzes for")
+        book = st.sidebar.radio("Select book", [k for k in st.session_state["categories_dict"][f"cat_{curr_cat}"].keys()])
+        if book != None:
+            run_quiz_generation(book, curr_cat)
+        else:
+            st.header("At least one pdf material must have been uploaded for quizzes to be generated")
+            st.subheader("Please upload a material")    
+    elif sub_opt == "Display Quiz":
+        display_on_streamlit()
+
 
 
 def delete_file():
@@ -52,6 +67,12 @@ def run_upload(curr_cat):
         post_save_cat()
         st.write("Please Proceed")
 
+def run_quiz_generation(book, curr_cat):
+    cat_dict = st.session_state["categories_dict"][f"cat_{curr_cat}"]
+    quizz_generation(book, cat_dict) == "Done"
+
+def display_quiz():
+    pass
 
 def run_cat_selection(selection):
     ind = st.session_state["categories"].index(selection)
@@ -66,7 +87,6 @@ def run_cat_selection(selection):
         run_upload(selection)
     else:
         delete_file()
-
 
 
 def add_new_ctegory(categories):
