@@ -3,7 +3,8 @@ import requests
 from dotenv import load_dotenv
 import os
 import json
-from utils import upload, chatbot, quizz_generation, display_on_streamlit
+from utils import upload, chatbot, quizz_generation, display_on_streamlit, clear_prev_gen_quiz, log_activity
+import time
 
 
 load_dotenv()
@@ -30,6 +31,8 @@ def post_save_cat():
 def run_interact(curr_cat):
     sub_opt = st.sidebar.radio("What action ?", ["Interact", "Generate_quiz", "Display Quiz"])
     if sub_opt == "Interact":
+        clear_prev_gen_quiz()
+        log_activity('select-interaction-chat')
         st.sidebar.write("Select what pdf you want to interact with")
         book = st.sidebar.radio("Select book", [k for k in st.session_state["categories_dict"][f"cat_{curr_cat}"].keys()])
         if book:
@@ -46,6 +49,8 @@ def run_interact(curr_cat):
             st.subheader("Please upload a material")  
 
     elif sub_opt == "Generate_quiz":
+        clear_prev_gen_quiz()
+        log_activity('quiz-generation')
         st.sidebar.write("Select what pdf you want to generate quizzes for")
         book = st.sidebar.radio("Select book", [k for k in st.session_state["categories_dict"][f"cat_{curr_cat}"].keys()])
         if book != None:
@@ -54,6 +59,7 @@ def run_interact(curr_cat):
             st.header("At least one pdf material must have been uploaded for quizzes to be generated")
             st.subheader("Please upload a material")    
     elif sub_opt == "Display Quiz":
+        log_activity('display-quiz')
         display_on_streamlit()
 
 
@@ -81,9 +87,13 @@ def run_cat_selection(selection):
     st.sidebar.title("Options")
     opt_sel = st.sidebar.selectbox("Actions", ["Interact", "Upload file", "Delete file"])
     if opt_sel == "Interact":
+        clear_prev_gen_quiz()
+        log_activity("select interact")
         post_save_cat()
         run_interact(selection)
     elif opt_sel == "Upload file":
+        log_activity("start-upload")
+        clear_prev_gen_quiz()
         run_upload(selection)
     else:
         delete_file()
@@ -114,6 +124,7 @@ def add_new_ctegory(categories):
                 #print(st.session_state["ret"])
                 post_save_cat()
                 st.success("Category created", icon="👌")
+                log_activity('finsih-category-creation')
 
 if 'loggedIn' not in st.session_state:
     st.error("Please Login to Use feature......Return Home to login")
@@ -125,6 +136,9 @@ else:
 
     selection = st.sidebar.radio("Go to", st.session_state['categories'])
     if selection == "Add New category":
+        log_activity('create-category')
         add_new_ctegory(categories)
     else:
+        clear_prev_gen_quiz()
+        log_activity('select-category')
         run_cat_selection(selection)

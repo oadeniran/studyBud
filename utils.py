@@ -22,6 +22,9 @@ from langchain_core.prompts import PromptTemplate
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.documents.base import Document
+import time
+import json
+import requests
 
 
 load_dotenv()
@@ -32,6 +35,7 @@ TRUE_OR_FALSE="True/False"
 FLASH_CARDS='Flash Cards😍'
 OBJECTIVE_DEFAULT_VALUE=5
 TRUE_OR_FALSE_DEFAULT_VALUE=5
+base_url = os.getenv("BaseUrl")
 
 llm = ChatOpenAI(    
         openai_api_key=OPENAI_API_KEY, 
@@ -83,6 +87,20 @@ class Agency:
     def get_response(self,user_input):
         response = self.agent({"input":user_input,"chat_history":[]})
         return response
+
+
+def log_activity(name):
+    st.session_state['activities'].append((name + '-' + str(round(time.time() - st.session_state["start_time"], 2))))
+    payload = json.dumps({
+                    "uid_date": st.session_state["uid+date"],
+                    "activity": st.session_state['activities']
+                })
+    url = f"{base_url}/update-user-activity"
+    result = requests.post(
+        url,
+        headers={'Content-Type': 'application/json'},
+        data=payload,
+    )
 
 
 def load_cont(container_name):
@@ -174,6 +192,7 @@ def upload(uid, category_name, category_dict):
                 if category_name not in st.session_state["bots"]:
                     st.session_state["bots"][category_name] = []
                 st.session_state["bots"][category_name].append(agency)
+                log_activity('upload-done')
                 st.success("PDF processed Successfully!!!")
                 
                 return "done"
@@ -196,6 +215,7 @@ def chatbot(pdf_name, category_name,ind, history_dict):
         chat_container = st.container()
         user_input = st.text_area("Type your question here.", key=history_dict["input_message_key"])
         if st.button("Send"):
+            log_activity('send-message')
             response = qa.get_response(user_input)
             history_dict["past"].append(user_input)
             history_dict["generated"].append(response['output'])
@@ -453,6 +473,7 @@ def quizz_generation(pdf_name, category_dict):
             st.info("Generating Quizz Questions")
         st.session_state['questions'] = generate_questions(selection,pages_to_query,user_input)
         st.session_state['selection'] = selection
+        log_activity('quiz-generation-succeeded')
         st.success("Quizz generated Successfullyy")
         st.info("Please Click on the Display Quizz Button to Proceed")
         return "Done"
@@ -489,6 +510,8 @@ def display_on_streamlit():
     if 'questions' not in st.session_state:
         st.error("Generate Quizz please")
         return
+    st.warning("For this demo, leaving this page means you have to generate the quizzes again")
+    log_activity('start-quiz-viewing')
     data = st.session_state['questions']
     type = st.session_state['selection']
     if type == FLASH_CARDS:
@@ -607,7 +630,14 @@ def display_on_streamlit():
 
             # Display score
             st.write(f"Your Score: {state['score']}/{len(data)}")
+            log_activity('Finished-quiz')
 
             if st.button('Try Again'):
                 state['submitted']
                 st.experimental_rerun()
+
+
+def clear_prev_gen_quiz():
+    if 'questions' in st.session_state:
+        del st.session_state['questions']
+        del st.session_state['selection']

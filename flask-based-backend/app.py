@@ -148,10 +148,55 @@ def get_categories():
 def save_user_cat_upload():
     pass
 
+@app.route("/post-feedback", methods = ["post"])
+def save_user_feedback():
+    feedback_details = request.form.to_dict()
+    print(feedback_details)
+    try:
+        feedbacks.insert_one(feedback_details)
+        return {"message": "Success!. Your feedback has been well recieved",
+                "status_code" : 200}
+    except:
+        return {"message": "Error in giving feedback, please try again",
+                    "status_code" : 400}
+
+
+@app.route("/update-user-activity", methods = ["Post"])
+def update_user_activity():
+    details = request.json
+    try:
+        curr_activies = activities_db.find_one({"uid_date" : details["uid_date"]})
+    except:
+        return json.dumps({
+                    "message" : "Error in DB",
+                    "status_code" : 404
+                    })
+    if curr_activies:
+        #print(details)
+        try:
+            activities_db.find_one_and_update({"uid_date" : details["uid_date"]}, {'$set' : details})
+        except:
+            return {"message": "Error in updating activity",
+                    "status_code" : 400}
+        
+        return {"message": "Success in updating activity",
+                "status_code" : 200}
+    else:
+        #print("Here")
+        try:
+            activities_db.insert_one(details)
+            return {"message": "Success in creating activity",
+                "status_code" : 200}
+        except:
+            return {"message": "Error in DB",
+                    "status_code" : 400}
+
 
 if __name__ == "__main__":
     client = get_database()
     userinfo_d = client['users-details']
     user_hist = client['users-history']
     user_cat = client["users-categories"]
+    feedbacks = client["feedbacks"]
+    activities_db = client["activities"]
     app.run(host = "0.0.0.0", debug=True, port=9000)
