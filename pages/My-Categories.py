@@ -32,7 +32,7 @@ def run_interact(curr_cat):
     sub_opt = st.sidebar.radio("What action ?", ["Interact", "Generate_quiz", "Display Quiz"])
     if sub_opt == "Interact":
         clear_prev_gen_quiz()
-        log_activity('select-interaction-chat')
+        log_activity('select-interaction-chat under category')
         st.sidebar.write("Select what pdf you want to interact with")
         book = st.sidebar.radio("Select book", [k for k in st.session_state["categories_dict"][f"cat_{curr_cat}"].keys()])
         if book:
@@ -50,7 +50,7 @@ def run_interact(curr_cat):
 
     elif sub_opt == "Generate_quiz":
         clear_prev_gen_quiz()
-        log_activity('quiz-generation')
+        log_activity('quiz-generation under category')
         st.sidebar.write("Select what pdf you want to generate quizzes for")
         book = st.sidebar.radio("Select book", [k for k in st.session_state["categories_dict"][f"cat_{curr_cat}"].keys()])
         if book != None:
@@ -59,7 +59,7 @@ def run_interact(curr_cat):
             st.header("At least one pdf material must have been uploaded for quizzes to be generated")
             st.subheader("Please upload a material")    
     elif sub_opt == "Display Quiz":
-        log_activity('display-quiz')
+        log_activity('display-quiz under category')
         display_on_streamlit()
 
 
@@ -88,11 +88,11 @@ def run_cat_selection(selection):
     opt_sel = st.sidebar.selectbox("Actions", ["Interact", "Upload file", "Delete file"])
     if opt_sel == "Interact":
         clear_prev_gen_quiz()
-        log_activity("select interact")
+        log_activity("select interact under category")
         post_save_cat()
         run_interact(selection)
     elif opt_sel == "Upload file":
-        log_activity("start-upload")
+        log_activity("start-upload under category")
         clear_prev_gen_quiz()
         run_upload(selection)
     else:

@@ -1,7 +1,8 @@
 import streamlit as st
 from utils import log_activity
 
-log_activity("visit-about-page")
+if 'loggedIn' in st.session_state:
+    log_activity("visit-about-page")
 
 st.header("Study Buddy streamlit demo")
 

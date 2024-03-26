@@ -18,6 +18,9 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 import pickle as pk
 import numpy as np
+from utils import log_activity
+
+log_activity("visit-interact-page")
 
 
 
@@ -590,12 +593,16 @@ def main():
     st.sidebar.title("Navigation")
     selection = st.sidebar.radio("Go to", ["Upload File","Interact With Uploaded PDF File", "Quizz Generation","Display Quizz"])
     if selection == "Upload File":
+        log_activity("visit-interact-page")
         upload()
     elif selection == "Interact With Uploaded PDF File":
+        log_activity('select-interaction-chat')
         chatbot()
     elif selection == "Quizz Generation":
+        log_activity('quiz-generation')
         quizz_generation()
     elif selection == "Display Quizz":
+        log_activity('display-quiz')
         display_on_streamlit()
 
 main()
