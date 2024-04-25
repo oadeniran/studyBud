@@ -20,10 +20,6 @@ import pickle as pk
 import numpy as np
 from utils import log_activity
 
-log_activity("visit-interact-page")
-
-
-
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OBJECTIVE="Objective"

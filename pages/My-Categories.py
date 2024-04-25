@@ -49,7 +49,6 @@ def run_interact(curr_cat):
             st.subheader("Please upload a material")  
 
     elif sub_opt == "Generate_quiz":
-        clear_prev_gen_quiz()
         log_activity('quiz-generation under category')
         st.sidebar.write("Select what pdf you want to generate quizzes for")
         book = st.sidebar.radio("Select book", [k for k in st.session_state["categories_dict"][f"cat_{curr_cat}"].keys()])
@@ -87,7 +86,6 @@ def run_cat_selection(selection):
     st.sidebar.title("Options")
     opt_sel = st.sidebar.selectbox("Actions", ["Interact", "Upload file", "Delete file"])
     if opt_sel == "Interact":
-        clear_prev_gen_quiz()
         log_activity("select interact under category")
         post_save_cat()
         run_interact(selection)
@@ -139,6 +137,5 @@ else:
         log_activity('create-category')
         add_new_ctegory(categories)
     else:
-        clear_prev_gen_quiz()
         log_activity('select-category')
         run_cat_selection(selection)

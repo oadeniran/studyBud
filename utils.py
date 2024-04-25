@@ -510,6 +510,7 @@ def display_on_streamlit():
     if 'questions' not in st.session_state:
         st.error("Generate Quizz please")
         return
+    
     st.warning("For this demo, leaving this page means you have to generate the quizzes again")
     log_activity('start-quiz-viewing')
     data = st.session_state['questions']
