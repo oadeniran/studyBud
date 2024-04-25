@@ -20,6 +20,8 @@ import pickle as pk
 import numpy as np
 from utils import log_activity
 
+
+
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OBJECTIVE="Objective"
@@ -589,16 +591,20 @@ def main():
     st.sidebar.title("Navigation")
     selection = st.sidebar.radio("Go to", ["Upload File","Interact With Uploaded PDF File", "Quizz Generation","Display Quizz"])
     if selection == "Upload File":
-        log_activity("visit-interact-page")
+        if 'loggedIn' in st.session_state:
+            log_activity("visit-interact-page")
         upload()
     elif selection == "Interact With Uploaded PDF File":
-        log_activity('select-interaction-chat')
+        if 'loggedIn' in st.session_state:
+            log_activity("visit-interact-page")
         chatbot()
     elif selection == "Quizz Generation":
-        log_activity('quiz-generation')
+        if 'loggedIn' in st.session_state:
+            log_activity("visit-interact-page")
         quizz_generation()
     elif selection == "Display Quizz":
-        log_activity('display-quiz')
+        if 'loggedIn' in st.session_state:
+            log_activity("visit-interact-page")
         display_on_streamlit()
 
 main()
